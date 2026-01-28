@@ -1,154 +1,35 @@
-# 🎓 Sabancı University — CS445 (Natural Language Processing) Course Project
+# 🎓 Sabancı University — CS445 (Natural Language Processing) Course Project  
+## 🌍 SemEval-2026 Task 9 — Detecting Online Polarization (Subtask 1)
 
-Welcome! This repository contains our **CS445 (NLP)** course project at **Sabancı University**.  
-In CS445, student teams select a task from the **SemEval-2026 shared tasks** and develop an NLP system by combining:
-- 📚 **relevant research literature**
-- 🧪 **systematic experimentation**
-- 🧩 **a reproducible and runnable implementation**
-- 📝 **well-structured milestone + final reports and presentations**
+Welcome! This repository contains our **CS445 (NLP)** course project at **Sabancı University**. In CS445, student teams select a **SemEval-2026 shared task** and develop an NLP system grounded in **academic literature**, supported by **systematic experimentation**, and delivered as a **reproducible implementation** along with milestone and final reports/presentations.
 
-> SemEval is a workshop held alongside **EMNLP**, where research groups release tasks + datasets and teams build systems to solve them. 
+We chose **SemEval-2026 Task 9: Detecting Multilingual, Multicultural & Multievent Online Polarization**, and focused on the **mandatory Subtask 1**, which is a **binary text classification** problem: given a text sample in multiple languages, the system predicts whether it is **Polarized** or **Non-Polarized**. Since polarization datasets can exhibit **class imbalance**, we emphasize evaluation practices that reflect performance fairly across classes (e.g., **Macro-F1** rather than only accuracy), and we designed our experiments accordingly.
 
----
+### 🧠 What We Did (High-Level)
+Our work follows a progressive modeling pipeline—from simple, interpretable baselines to advanced multilingual architectures—so that each step adds meaningful value and helps us understand what improves the task:
 
-## 🧩 Project Selection
+- 🧱 **Classical baseline:** We implemented a strong traditional approach using **TF-IDF features + Logistic Regression** to establish a reliable baseline and validate the end-to-end pipeline quickly.
+- 🧬 **Neural baselines:** We explored sequence models such as **(C)LSTM / BiLSTM** and **BiLSTM + Attention**, which learn richer representations than sparse features. We also experimented with additional signals like **language identity features** to better support multilingual learning.
+- 🤗 **Transformer fine-tuning (multilingual):** We fine-tuned several transformer-based multilingual encoders commonly used for cross-lingual classification, including **XLM-R (base/large)**, **InfoXLM**, **mDeBERTa-v3**, and **RemBERT**, comparing their behavior across multilingual settings.
+- ⚖️ **Class imbalance handling:** To reduce bias toward majority classes and improve robustness, we experimented with imbalance-aware strategies such as **Focal Loss** and **weighted sampling / inverse-frequency weighting**.
+- 🧩 **Ensembling for robustness:** Because different models can excel on different languages and linguistic patterns, we built an **ensemble** approach (soft voting / weighted combination) to mitigate model-specific weaknesses and improve stability across languages.
+- 🧠 **Parameter-efficient tuning (additional exploration):** As an extra direction, we also explored efficient fine-tuning techniques (e.g., **QLoRA-style tuning**) for decoder-style models under compute/memory constraints.
 
-As specified in the official course project document: 
+### 🧪 Evaluation & Reproducibility
+SemEval-style tasks often rely on **hidden test sets**, so reliable validation is essential. We used reproducible **train/validation splits** (fixed seed) and reported standard classification analyses in our documentation (e.g., macro-focused metrics and diagnostic plots such as confusion matrices and PR-style visualizations). Full methodological details, experimental settings, and qualitative/quantitative analyses are provided in the project reports included in this repository.
 
-- Each group chooses **one** of **six** SemEval tasks proposed for the course.
-- Some tasks contain **multiple subtasks**:
-  - The course clearly states **which subtask is mandatory** (others may be optional).
-- The expectation is not only achieving a good score, but also demonstrating:
-  - a clear research process,
-  - thoughtful design decisions,
-  - and meaningful contributions beyond copying an existing solution. 
----
+### 📚 CS445 Course Expectations (How This Repo Fits)
+This project aligns with CS445 requirements by:
+- 📖 following a **literature-driven** approach (related work from reputable venues),
+- 🧪 demonstrating an **iterative experimentation process** across multiple model families,
+- 🧠 clearly emphasizing **contribution and engineering/research journey**, not only leaderboard score,
+- 📝 delivering milestone + final **reports and presentations**, and a runnable system (notebook/scripts) as required by the course.
 
-## 🌍 Our Chosen SemEval Task
-
-We chose:
-
-- **SemEval-2026 Task 9: Detecting Multilingual, Multicultural and Multievent Online Polarization**
-- ✅ **Subtask 1 is mandatory** for Task 9 (additional subtasks are optional). 
-
-📌 This repository focuses on the **course project implementation and documentation** for the selected SemEval task.  
-📄 Our detailed experiments and findings are provided in the **reports** included in this repo.
-
----
-
-## 🗂️ Dataset & Data Curation (General Rules)
-
-SemEval tasks provide an official dataset. In this course project:
-
-- You may **use the provided dataset directly**.
-- You may also **curate additional datasets** if you believe they improve your system.
-- You may apply **data augmentation** techniques when appropriate.
-- Since SemEval evaluations often involve a **hidden test set**, the course recommends:
-  - ✅ **cross-validation**, or
-  - ✅ using a **fixed random seed** for reproducible train/validation splits. 
-
-> ⚠️ If task organizers release test data publicly, it should be used **only for evaluation**, not for model improvement. 
-
----
-
-## 📚 Research & Literature Requirement
-
-A core part of CS445 projects is grounding your approach in **reputable academic work**. 
-You are expected to:
-- Perform a literature search early in the project
-- Cite and discuss prior work that motivates your design choices
-- Include a minimum number of papers in the report (see “Report Requirements” below)
-
-✅ The course restricts acceptable papers to approved venues such as:  
-**ACL, EMNLP, NeurIPS, CoNLL, NAACL, EACL, COLING, LREC**, and SCI-Expanded journals.
-
----
-
-## 🧑‍💻 Use of Existing Code & Academic Integrity
-
-You may use:
-- external libraries (e.g., HuggingFace, Kaggle toolkits),
-- open-source implementations,
-- public baselines.
-
-But the course requires: :contentReference[oaicite:9]{index=9}
-- 🔍 **Clearly stating what you used**
-- ✍️ **Clearly explaining your own contribution**
-- 🚫 Not presenting external code as your own (plagiarism)
-
-Importantly, the course emphasizes that:
-> **Your contribution is more important than simply submitting the best F1 score.**  
-You should try multiple approaches and demonstrate your journey. 
-
----
-
-## 📝 Report Requirements (Expected Structure)
-
-The final project report is expected to include the following sections: 
-
-1. **Introduction** — task overview + approach summary  
-2. **Related Work** — brief literature review (**≥ 5 papers**)  
-3. **Methodology** — dataset choice + training details for reproducibility  
-4. **Results** — required metrics, plots, and experiments tried  
-5. **Discussion** — design tradeoffs, limitations, future improvements  
-6. **Conclusion** — summary of key points  
-7. **Individual Contributions** — who did what
-
-📌 The course also recommends that you **show your journey**, including attempts that were not used in the final system. 
-
----
-
-## 🎤 Deliverables & Timeline (Course)
-
-### ✅ Milestone Deliverables (November)
-- 📄 **Milestone report** (max **4 pages**, excluding references/appendix)
-- 🧑‍🏫 **5-minute presentation + 5-minute Q&A**
-- 👥 All members must attend; Q&A contributes to individual grading 
-
-### ✅ Final Deliverables (January)
-- 📄 **Final report** (max **8 pages**, excluding references/appendix)
-- 💻 **Well-commented runnable system** (Jupyter Notebook + required files)
-- 🧑‍🏫 **25-minute presentation + 5-minute Q&A**
-- 👥 Everyone presents their contribution; Q&A contributes to individual grading 
-
----
-
-## 🧮 Grading (High-Level)
-
-The course grading includes both group and individual evaluation components: 
-
-- Milestone presentation/report
-- Final group report + code
-- Submission to the task website
-- **Individual performance** (presentation + Q&A + contribution)
-
----
-
-## 🤖 AI Usage Policy (Course)
-
-The course policy allows AI tools for: 
-- ✅ spell-checking
-- ✅ improving writing flow *after you write the report yourself*
-
-But does **not** allow:
-- ❌ writing the report from scratch using AI
-- ❌ writing the full codebase using AI (beyond permitted syllabus use)
-
----
-
-## 📁 What You’ll Find in This Repository
-
-Typical contents include:
-- 📄 Milestone and Final reports and presentations (PDF)
-- 📓 Jupyter notebooks / scripts to run the system
+### 📁 Repository Contents
+This repository typically includes:
+- 📄 **Milestone Report** and **Final Report** and presentations 
+- 💻 Source code and/or notebooks for baselines, neural models, transformer fine-tuning, and ensembling
 
 
-> Note: The official SemEval dataset may not be stored in this repository.  
-Please obtain it from the task organizers and place it into the expected folder used by the code.
 
----
 
-## 🙏 Acknowledgements
-
-- **Sabancı University — CS445: Natural Language Processing**
-- **SemEval-2026 / EMNLP** organizers and task authors for the task and dataset resources 
